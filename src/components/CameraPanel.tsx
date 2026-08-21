@@ -31,7 +31,11 @@ function getCameraError(error: unknown): CameraStatus {
   return 'error'
 }
 
-function CameraPanel() {
+interface CameraPanelProps {
+  onVideoReady: (video: HTMLVideoElement | null) => void
+}
+
+function CameraPanel({ onVideoReady }: CameraPanelProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [status, setStatus] = useState<CameraStatus>('starting')
   const [cameraAttempt, setCameraAttempt] = useState(0)
@@ -62,6 +66,7 @@ function CameraPanel() {
 
         if (videoElement) {
           videoElement.srcObject = stream
+          onVideoReady(videoElement)
         }
 
         setStatus('active')
@@ -81,8 +86,10 @@ function CameraPanel() {
       if (videoElement) {
         videoElement.srcObject = null
       }
+
+      onVideoReady(null)
     }
-  }, [cameraAttempt])
+  }, [cameraAttempt, onVideoReady])
 
   const errorMessages: Partial<Record<CameraStatus, string>> = {
     denied:

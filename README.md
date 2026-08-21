@@ -1,10 +1,10 @@
 # GestureDeck
 
-GestureDeck é uma aplicação web de apresentação controlada por gestos. A proposta é reconhecer gestos da mão pela webcam usando um modelo treinado no Google Teachable Machine e convertê-los em comandos de navegação.
+GestureDeck é uma aplicação web de apresentação controlada por gestos. A webcam é classificada em tempo real por um modelo treinado no Google Teachable Machine, e gestos validados são convertidos em comandos dos slides.
 
 ## Status
 
-O front-end inicial está pronto, incluindo apresentação demonstrativa, controles manuais e webcam. A integração com o modelo de reconhecimento será adicionada em uma próxima etapa.
+O front-end e a integração do modelo estão prontos. A aplicação mostra a predição atual, a confiança de todas as classes e o status real do modelo.
 
 ## Tecnologias
 
@@ -12,8 +12,8 @@ O front-end inicial está pronto, incluindo apresentação demonstrativa, contro
 - TypeScript
 - Vite
 - Tailwind CSS
-- TensorFlow.js (futuramente)
-- Google Teachable Machine (futuramente)
+- TensorFlow.js
+- Google Teachable Machine
 
 ## Como executar
 
@@ -36,34 +36,32 @@ npm run build
 ## Estrutura
 
 ```text
-public/model/       Arquivos exportados do modelo
+public/model/       Modelo exportado pelo Teachable Machine
 src/components/    Componentes da interface
 src/data/          Conteúdo demonstrativo dos slides
+src/hooks/         Carregamento, predição e validação dos gestos
 src/types/         Tipos compartilhados
 ```
 
 ## Modelo
 
-O modelo exportado pelo Google Teachable Machine ficará em `public/model/`. O TensorFlow.js ainda não faz parte desta etapa.
+O modelo de classificação de imagens foi treinado no Google Teachable Machine e exportado no formato TensorFlow.js. Seus arquivos `model.json`, `metadata.json` e `weights.bin` ficam em `public/model/`.
 
-## Classes planejadas
+A classificação acontece localmente no navegador. Imagens da webcam não são enviadas para um servidor.
 
-Os nomes abaixo são provisórios e poderão mudar após a análise do dataset:
+## Classes e ações
 
-- `LEFT` - slide anterior
-- `RIGHT` - próximo slide
-- `ACTION` - mostrar ou ocultar detalhes
+- `OPEN_PALM` - mostrar ou esconder os detalhes do slide
+- `PEACE_SIGN` - próximo slide
+- `CLOSED_FIST` - slide anterior
 - `NEUTRAL` - nenhuma ação
+
+Uma ação exige confiança mínima de 85% e cinco predições consecutivas da mesma classe. Depois da execução existe um cooldown de 1200 ms, e o gesto fica bloqueado até a detecção estável de `NEUTRAL`.
 
 ## Dataset
 
-Esta seção será atualizada com:
-
-- nome e fonte do dataset;
-- classes utilizadas;
-- quantidade de imagens;
-- processo de treinamento.
+O modelo utiliza quatro classes: `OPEN_PALM`, `PEACE_SIGN`, `CLOSED_FIST` e `NEUTRAL`. Esta seção poderá ser complementada com a fonte, a quantidade de imagens e o processo de treinamento.
 
 ## Demonstração
 
-Screenshots, GIFs ou um vídeo curto serão adicionados após a conclusão da integração.
+Screenshots, GIFs ou um vídeo curto poderão ser adicionados para demonstrar o reconhecimento dos gestos.

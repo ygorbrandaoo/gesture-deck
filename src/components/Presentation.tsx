@@ -14,7 +14,12 @@ interface SlideVisualProps {
   type: Slide['visual']
 }
 
-const gestureLabels = ['LEFT', 'RIGHT', 'ACTION', 'NEUTRAL']
+const gestureLabels = [
+  'CLOSED_FIST',
+  'PEACE_SIGN',
+  'OPEN_PALM',
+  'NEUTRAL',
+]
 
 function SlideVisual({ type }: SlideVisualProps) {
   if (type === 'flow') {
@@ -190,7 +195,7 @@ function Presentation({
           type="button"
         >
           {showDetails ? 'Hide details' : 'Show details'}
-          <span className="ml-2 font-mono text-violet-300">ACTION</span>
+          <span className="ml-2 font-mono text-violet-300">OPEN_PALM</span>
         </button>
 
         <div className="grid grid-cols-2 gap-2 sm:flex">

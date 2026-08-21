@@ -1,8 +1,30 @@
+import type { ModelStatus } from '../types/prediction'
+
 interface NavbarProps {
-  isModelReady: boolean
+  modelStatus: ModelStatus
 }
 
-function Navbar({ isModelReady }: NavbarProps) {
+const modelStatusContent: Record<
+  ModelStatus,
+  { label: string; indicatorClass: string }
+> = {
+  loading: {
+    label: 'Loading model...',
+    indicatorClass: 'animate-pulse bg-amber-400',
+  },
+  ready: {
+    label: 'Model ready',
+    indicatorClass: 'bg-emerald-400',
+  },
+  error: {
+    label: 'Model error',
+    indicatorClass: 'bg-red-400',
+  },
+}
+
+function Navbar({ modelStatus }: NavbarProps) {
+  const status = modelStatusContent[modelStatus]
+
   return (
     <header className="border-b border-zinc-800/80 bg-zinc-950/90 backdrop-blur">
       <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
@@ -42,12 +64,8 @@ function Navbar({ isModelReady }: NavbarProps) {
           className="flex items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900/70 px-3 py-1.5 text-xs font-medium text-zinc-400"
           role="status"
         >
-          <span
-            className={`size-2 rounded-full ${
-              isModelReady ? 'bg-emerald-400' : 'bg-amber-400'
-            }`}
-          />
-          {isModelReady ? 'Model ready' : 'Model not loaded'}
+          <span className={`size-2 rounded-full ${status.indicatorClass}`} />
+          {status.label}
         </div>
       </div>
     </header>
