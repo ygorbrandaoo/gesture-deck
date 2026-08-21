@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import * as tf from '@tensorflow/tfjs'
+import { hasGestureAction } from '../data/gestures'
 import type { ModelStatus, Prediction } from '../types/prediction'
 
 export const CONFIDENCE_THRESHOLD = 0.85
@@ -223,7 +224,7 @@ export function useGestureModel(
       const now = performance.now()
       updateCooldown(now)
       const isActionableGesture =
-        prediction.className !== 'BACKGROUND' &&
+        hasGestureAction(prediction.className) &&
         prediction.probability >= CONFIDENCE_THRESHOLD
 
       if (!isActionableGesture) {

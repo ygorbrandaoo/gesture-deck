@@ -3,6 +3,7 @@ export const gestureNames = [
   'PEACE_SIGN',
   'OPEN_PALM',
   'BACKGROUND',
+  'HUMAN-FACE',
 ] as const
 
 export type GestureName = (typeof gestureNames)[number]
@@ -41,10 +42,20 @@ export const gestureInfo: Record<GestureName, GestureInfo> = {
     description: 'Move your hand away before repeating the same command.',
     command: null,
   },
+  'HUMAN-FACE': {
+    name: 'Human face',
+    action: 'No action',
+    description: 'Wait for a hand gesture before running a command.',
+    command: null,
+  },
 }
 
 export function getGestureInfo(className: string): GestureInfo | null {
   return Object.hasOwn(gestureInfo, className)
     ? gestureInfo[className as GestureName]
     : null
+}
+
+export function hasGestureAction(className: string): boolean {
+  return getGestureInfo(className)?.command != null
 }

@@ -55,12 +55,13 @@ A classificação acontece localmente no navegador. Imagens da webcam não são 
 - `PEACE_SIGN` - próximo slide
 - `CLOSED_FIST` - slide anterior
 - `BACKGROUND` - nenhuma ação
+- `HUMAN-FACE` - nenhuma ação
 
-A confiança exibida e usada para validar gestos é suavizada entre frames. Uma ação exige confiança mínima de 85% mantida por 650 ms. Depois da execução existe um cooldown visual de 2000 ms. Durante esse período nenhuma ação é executada novamente. Para repetir o mesmo comando, mostre `BACKGROUND` antes de fazer o gesto de novo.
+A confiança exibida e usada para validar gestos é suavizada entre frames. Uma ação exige confiança mínima de 85% mantida por 650 ms. Depois da execução existe um cooldown visual de 2000 ms. Durante esse período nenhuma ação é executada novamente. Para repetir o mesmo comando, mostre `BACKGROUND` ou `HUMAN-FACE` antes de fazer o gesto de novo.
 
 ## Dataset
 
-O modelo utiliza quatro classes: `OPEN_PALM`, `PEACE_SIGN`, `CLOSED_FIST` e `BACKGROUND`. Esta seção poderá ser complementada com a fonte, a quantidade de imagens e o processo de treinamento.
+O modelo utiliza cinco classes: `OPEN_PALM`, `PEACE_SIGN`, `CLOSED_FIST`, `BACKGROUND` e `HUMAN-FACE`. Esta seção poderá ser complementada com a fonte, a quantidade de imagens e o processo de treinamento.
 
 ## Demonstração
 
