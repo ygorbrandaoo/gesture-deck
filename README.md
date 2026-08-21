@@ -4,7 +4,18 @@ GestureDeck é uma aplicação web de apresentação controlada por gestos. A we
 
 ## Status
 
-O front-end e a integração do modelo estão prontos. A aplicação mostra a predição atual, a confiança de todas as classes e o status real do modelo.
+Projeto finalizado. A interface, a webcam, o modelo treinado e o controle da apresentação por gestos estão integrados e funcionando no navegador.
+
+## Funcionalidades
+
+- apresentação demonstrativa com cinco slides;
+- navegação automática por gestos e controles manuais auxiliares;
+- ativação e desligamento da webcam pela interface;
+- classificação contínua com as probabilidades reais das cinco classes;
+- indicador de carregamento e disponibilidade do modelo;
+- suavização das predições, confiança mínima, estabilidade temporal e cooldown;
+- tratamento de câmera indisponível, permissão negada e erro ao carregar o modelo;
+- layout responsivo para computadores e telas menores.
 
 ## Tecnologias
 
@@ -90,7 +101,3 @@ Publicado no Kaggle por [Kritanjali Jain](https://www.kaggle.com/kritanjalijain)
 Publicado no Kaggle por [Ashwin Gupta](https://www.kaggle.com/ashwingupta3012), o dataset reúne mais de 7.200 imagens de rostos obtidas na web. A coleção inclui diferentes idades, perfis e grupos demográficos, além de algumas imagens geradas por GAN. O conteúdo foi publicado sob licença CC0 e foi utilizado como fonte para a classe `HUMAN-FACE`.
 
 As quantidades acima descrevem os datasets de origem. O conjunto final usado no Teachable Machine passou por seleção e organização de acordo com as classes do GestureDeck.
-
-## Demonstração
-
-Screenshots, GIFs ou um vídeo curto poderão ser adicionados para demonstrar o reconhecimento dos gestos.
