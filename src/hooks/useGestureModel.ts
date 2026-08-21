@@ -206,7 +206,7 @@ export function useGestureModel(
         return
       }
 
-      if (prediction.className === 'NEUTRAL') {
+      if (prediction.className === 'BACKGROUND') {
         isGestureLocked = false
         stableFrames = 0
         return

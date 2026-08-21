@@ -2,7 +2,7 @@ export const gestureNames = [
   'CLOSED_FIST',
   'PEACE_SIGN',
   'OPEN_PALM',
-  'NEUTRAL',
+  'BACKGROUND',
 ] as const
 
 export type GestureName = (typeof gestureNames)[number]
@@ -13,7 +13,7 @@ const modelOutputToGesture: Record<string, GestureName> = {
   CLOSED_FIST: 'PEACE_SIGN',
   PEACE_SIGN: 'CLOSED_FIST',
   OPEN_PALM: 'OPEN_PALM',
-  NEUTRAL: 'NEUTRAL',
+  BACKGROUND: 'BACKGROUND',
 }
 
 export type GestureCommand = 'previous' | 'next' | 'toggle-details' | null
@@ -44,10 +44,10 @@ export const gestureInfo: Record<GestureName, GestureInfo> = {
     description: 'Toggle the extra details for the current slide.',
     command: 'toggle-details',
   },
-  NEUTRAL: {
-    name: 'Neutral',
+  BACKGROUND: {
+    name: 'Background',
     action: 'No action',
-    description: 'Release your hand before making another gesture.',
+    description: 'Move your hand away before making another gesture.',
     command: null,
   },
 }

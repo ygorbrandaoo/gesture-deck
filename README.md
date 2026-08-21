@@ -54,13 +54,13 @@ A classificação acontece localmente no navegador. Imagens da webcam não são 
 - `OPEN_PALM` - mostrar ou esconder os detalhes do slide
 - `PEACE_SIGN` - próximo slide
 - `CLOSED_FIST` - slide anterior
-- `NEUTRAL` - nenhuma ação
+- `BACKGROUND` - nenhuma ação
 
-Uma ação exige confiança mínima de 85% e cinco predições consecutivas da mesma classe. Depois da execução existe um cooldown de 1200 ms, e o gesto fica bloqueado até a detecção estável de `NEUTRAL`.
+Uma ação exige confiança mínima de 85% e cinco predições consecutivas da mesma classe. Depois da execução existe um cooldown de 1200 ms, e o gesto fica bloqueado até a detecção estável de `BACKGROUND`.
 
 ## Dataset
 
-O modelo utiliza quatro classes: `OPEN_PALM`, `PEACE_SIGN`, `CLOSED_FIST` e `NEUTRAL`. Esta seção poderá ser complementada com a fonte, a quantidade de imagens e o processo de treinamento.
+O modelo utiliza quatro classes: `OPEN_PALM`, `PEACE_SIGN`, `CLOSED_FIST` e `BACKGROUND`. Esta seção poderá ser complementada com a fonte, a quantidade de imagens e o processo de treinamento.
 
 ## Demonstração
 
