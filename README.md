@@ -4,7 +4,7 @@ GestureDeck é uma aplicação web de apresentação controlada por gestos. A pr
 
 ## Status
 
-O front-end inicial está em desenvolvimento. A integração com o modelo de reconhecimento será adicionada em uma próxima etapa.
+O front-end inicial está pronto, incluindo apresentação demonstrativa, controles manuais e webcam. A integração com o modelo de reconhecimento será adicionada em uma próxima etapa.
 
 ## Tecnologias
 
@@ -18,13 +18,18 @@ O front-end inicial está em desenvolvimento. A integração com o modelo de rec
 ## Como executar
 
 ```bash
+git clone https://github.com/ygorgabrielbml/gesture-deck.git
+cd gesture-deck
 npm install
 npm run dev
 ```
 
-Para gerar a versão de produção:
+Abra o endereço indicado pelo Vite e permita o acesso à câmera quando o navegador solicitar.
+
+Para verificar o código e gerar a versão de produção:
 
 ```bash
+npm run lint
 npm run build
 ```
 
