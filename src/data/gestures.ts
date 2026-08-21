@@ -7,15 +7,6 @@ export const gestureNames = [
 
 export type GestureName = (typeof gestureNames)[number]
 
-// The exported model's first two output indices are reversed relative to the
-// gesture names. Normalize them before presenting a prediction or executing it.
-const modelOutputToGesture: Record<string, GestureName> = {
-  CLOSED_FIST: 'PEACE_SIGN',
-  PEACE_SIGN: 'CLOSED_FIST',
-  OPEN_PALM: 'OPEN_PALM',
-  BACKGROUND: 'BACKGROUND',
-}
-
 export type GestureCommand = 'previous' | 'next' | 'toggle-details' | null
 
 export interface GestureInfo {
@@ -50,10 +41,6 @@ export const gestureInfo: Record<GestureName, GestureInfo> = {
     description: 'Move your hand away before making another gesture.',
     command: null,
   },
-}
-
-export function normalizeModelGesture(className: string): string {
-  return modelOutputToGesture[className] ?? className
 }
 
 export function getGestureInfo(className: string): GestureInfo | null {

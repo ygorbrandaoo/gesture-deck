@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import * as tf from '@tensorflow/tfjs'
-import { normalizeModelGesture } from '../data/gestures'
 import type { ModelStatus, Prediction } from '../types/prediction'
 
 export const CONFIDENCE_THRESHOLD = 0.85
@@ -109,7 +108,7 @@ async function loadGestureModel(): Promise<GestureModel> {
       const probabilities = await output.data()
 
       return modelMetadata.labels.map((className, index) => ({
-        className: normalizeModelGesture(className),
+        className,
         probability: probabilities[index] ?? 0,
       }))
     } finally {
