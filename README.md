@@ -56,7 +56,7 @@ A classificação acontece localmente no navegador. Imagens da webcam não são 
 - `CLOSED_FIST` - slide anterior
 - `BACKGROUND` - nenhuma ação
 
-Uma ação exige confiança mínima de 85% e cinco predições consecutivas da mesma classe. Depois da execução existe um cooldown de 1200 ms, e o gesto fica bloqueado até a detecção estável de `BACKGROUND`.
+Uma ação exige confiança mínima de 85% e cinco predições consecutivas da mesma classe. Depois da execução existe um cooldown de 1200 ms. O mesmo gesto só pode executar novamente após cinco frames de `BACKGROUND` ou sem uma predição válida.
 
 ## Dataset
 

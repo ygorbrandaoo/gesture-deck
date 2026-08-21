@@ -4,6 +4,7 @@ import type { ModelStatus, Prediction } from '../types/prediction'
 
 export const CONFIDENCE_THRESHOLD = 0.85
 export const REQUIRED_STABLE_FRAMES = 5
+export const REQUIRED_RELEASE_FRAMES = 5
 export const ACTION_COOLDOWN_MS = 1200
 
 const MODEL_URL = '/model/model.json'
@@ -184,15 +185,27 @@ export function useGestureModel(
     let isCancelled = false
     let stableClass = ''
     let stableFrames = 0
-    let isGestureLocked = false
+    let releaseFrames = 0
+    let activeGesture = ''
     let lastActionTime = 0
 
     function validateGesture(prediction: Prediction) {
-      if (prediction.probability < CONFIDENCE_THRESHOLD) {
+      const isActionableGesture =
+        prediction.className !== 'BACKGROUND' &&
+        prediction.probability >= CONFIDENCE_THRESHOLD
+
+      if (!isActionableGesture) {
         stableClass = ''
         stableFrames = 0
+        releaseFrames += 1
+
+        if (releaseFrames >= REQUIRED_RELEASE_FRAMES) {
+          activeGesture = ''
+        }
         return
       }
+
+      releaseFrames = 0
 
       if (prediction.className === stableClass) {
         stableFrames += 1
@@ -201,22 +214,19 @@ export function useGestureModel(
         stableFrames = 1
       }
 
-      if (stableFrames < REQUIRED_STABLE_FRAMES) {
-        return
-      }
-
-      if (prediction.className === 'BACKGROUND') {
-        isGestureLocked = false
-        stableFrames = 0
+      if (
+        stableFrames < REQUIRED_STABLE_FRAMES ||
+        prediction.className === activeGesture
+      ) {
         return
       }
 
       const cooldownFinished =
         Date.now() - lastActionTime >= ACTION_COOLDOWN_MS
 
-      if (!isGestureLocked && cooldownFinished) {
+      if (cooldownFinished) {
         onGestureRef.current(prediction.className)
-        isGestureLocked = true
+        activeGesture = prediction.className
         lastActionTime = Date.now()
         stableFrames = 0
       }
