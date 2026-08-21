@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 type CameraStatus =
   | 'starting'
+  | 'stopped'
   | 'active'
   | 'denied'
   | 'unavailable'
@@ -10,6 +11,7 @@ type CameraStatus =
 
 const statusLabels: Record<CameraStatus, string> = {
   starting: 'Starting',
+  stopped: 'Camera off',
   active: 'Camera active',
   denied: 'Access denied',
   unavailable: 'Not available',
@@ -32,10 +34,11 @@ function getCameraError(error: unknown): CameraStatus {
 }
 
 interface CameraPanelProps {
+  isEnabled: boolean
   onVideoReady: (video: HTMLVideoElement | null) => void
 }
 
-function CameraPanel({ onVideoReady }: CameraPanelProps) {
+function CameraPanel({ isEnabled, onVideoReady }: CameraPanelProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [status, setStatus] = useState<CameraStatus>('starting')
   const [cameraAttempt, setCameraAttempt] = useState(0)
@@ -46,6 +49,12 @@ function CameraPanel({ onVideoReady }: CameraPanelProps) {
     let isCancelled = false
 
     async function startCamera() {
+      if (!isEnabled) {
+        setStatus('stopped')
+        onVideoReady(null)
+        return
+      }
+
       setStatus('starting')
 
       if (!navigator.mediaDevices?.getUserMedia) {
@@ -89,7 +98,7 @@ function CameraPanel({ onVideoReady }: CameraPanelProps) {
 
       onVideoReady(null)
     }
-  }, [cameraAttempt, onVideoReady])
+  }, [cameraAttempt, isEnabled, onVideoReady])
 
   const errorMessages: Partial<Record<CameraStatus, string>> = {
     denied:
@@ -100,7 +109,8 @@ function CameraPanel({ onVideoReady }: CameraPanelProps) {
   }
 
   const errorMessage = errorMessages[status]
-  const canRetry = status === 'denied' || status === 'unavailable' || status === 'error'
+  const canRetry =
+    status === 'denied' || status === 'unavailable' || status === 'error'
 
   return (
     <section className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5 shadow-xl shadow-black/10">
@@ -152,6 +162,8 @@ function CameraPanel({ onVideoReady }: CameraPanelProps) {
                 <span className="mb-3 size-5 animate-spin rounded-full border-2 border-zinc-700 border-t-violet-300" />
                 <p className="text-sm text-zinc-400">Requesting camera access...</p>
               </>
+            ) : status === 'stopped' ? (
+              <p className="text-sm text-zinc-400">Camera is off.</p>
             ) : (
               <>
                 <svg

@@ -4,12 +4,15 @@ import ConfidenceList from './components/ConfidenceList'
 import Navbar from './components/Navbar'
 import PredictionPanel from './components/PredictionPanel'
 import Presentation from './components/Presentation'
+import GestureGuide from './components/GestureGuide'
+import { getGestureInfo } from './data/gestures'
 import { slides } from './data/slides'
 import { useGestureModel } from './hooks/useGestureModel'
 
 function App() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [showDetails, setShowDetails] = useState(false)
+  const [isCameraEnabled, setIsCameraEnabled] = useState(true)
   const [videoElement, setVideoElement] =
     useState<HTMLVideoElement | null>(null)
 
@@ -29,14 +32,14 @@ function App() {
   }
 
   function handleGesture(className: string) {
-    switch (className) {
-      case 'PEACE_SIGN':
+    switch (getGestureInfo(className)?.command) {
+      case 'next':
         nextSlide()
         break
-      case 'CLOSED_FIST':
+      case 'previous':
         previousSlide()
         break
-      case 'OPEN_PALM':
+      case 'toggle-details':
         toggleDetails()
         break
     }
@@ -44,7 +47,11 @@ function App() {
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
-      <Navbar modelStatus={modelStatus} />
+      <Navbar
+        isCameraEnabled={isCameraEnabled}
+        modelStatus={modelStatus}
+        onToggleCamera={() => setIsCameraEnabled((isEnabled) => !isEnabled)}
+      />
 
       <main className="mx-auto grid max-w-[1600px] gap-5 px-4 py-5 sm:px-6 sm:py-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:px-8">
         <Presentation
@@ -59,7 +66,10 @@ function App() {
 
         <aside className="grid content-start gap-4 sm:grid-cols-2 lg:grid-cols-1">
           <div className="sm:col-span-2 lg:col-span-1">
-            <CameraPanel onVideoReady={setVideoElement} />
+            <CameraPanel
+              isEnabled={isCameraEnabled}
+              onVideoReady={setVideoElement}
+            />
           </div>
           <PredictionPanel
             modelError={modelError}
@@ -67,6 +77,7 @@ function App() {
             prediction={currentPrediction}
           />
           <ConfidenceList predictions={predictions} />
+          <GestureGuide />
         </aside>
       </main>
     </div>

@@ -1,7 +1,9 @@
 import type { ModelStatus } from '../types/prediction'
 
 interface NavbarProps {
+  isCameraEnabled: boolean
   modelStatus: ModelStatus
+  onToggleCamera: () => void
 }
 
 const modelStatusContent: Record<
@@ -22,7 +24,11 @@ const modelStatusContent: Record<
   },
 }
 
-function Navbar({ modelStatus }: NavbarProps) {
+function Navbar({
+  isCameraEnabled,
+  modelStatus,
+  onToggleCamera,
+}: NavbarProps) {
   const status = modelStatusContent[modelStatus]
 
   return (
@@ -60,12 +66,22 @@ function Navbar({ modelStatus }: NavbarProps) {
           </div>
         </div>
 
-        <div
-          className="flex items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900/70 px-3 py-1.5 text-xs font-medium text-zinc-400"
-          role="status"
-        >
-          <span className={`size-2 rounded-full ${status.indicatorClass}`} />
-          {status.label}
+        <div className="flex items-center gap-2">
+          <button
+            aria-pressed={isCameraEnabled}
+            className="rounded-full border border-zinc-700 bg-zinc-900/70 px-3 py-1.5 text-xs font-medium text-zinc-300 transition hover:border-zinc-600 hover:bg-zinc-800"
+            onClick={onToggleCamera}
+            type="button"
+          >
+            {isCameraEnabled ? 'Stop camera' : 'Start camera'}
+          </button>
+          <div
+            className="hidden items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900/70 px-3 py-1.5 text-xs font-medium text-zinc-400 sm:flex"
+            role="status"
+          >
+            <span className={`size-2 rounded-full ${status.indicatorClass}`} />
+            {status.label}
+          </div>
         </div>
       </div>
     </header>

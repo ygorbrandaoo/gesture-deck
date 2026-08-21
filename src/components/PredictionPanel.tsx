@@ -1,3 +1,4 @@
+import { getGestureInfo } from '../data/gestures'
 import type { ModelStatus, Prediction } from '../types/prediction'
 
 interface PredictionPanelProps {
@@ -15,8 +16,11 @@ function PredictionPanel({
     ? `${Math.round(prediction.probability * 100)}%`
     : '--'
 
+  const gesture = prediction ? getGestureInfo(prediction.className) : null
   let predictionLabel = prediction?.className ?? 'Waiting for camera'
-  let helperText = 'Show a gesture to begin'
+  let helperText = gesture
+    ? `${gesture.action}. ${gesture.description}`
+    : 'Show a gesture to begin'
 
   if (modelStatus === 'loading') {
     predictionLabel = 'Loading model...'

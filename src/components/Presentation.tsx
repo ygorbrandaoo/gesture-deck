@@ -1,3 +1,4 @@
+import { gestureInfo, gestureNames } from '../data/gestures'
 import type { Slide } from '../data/slides'
 
 interface PresentationProps {
@@ -13,13 +14,6 @@ interface PresentationProps {
 interface SlideVisualProps {
   type: Slide['visual']
 }
-
-const gestureLabels = [
-  'CLOSED_FIST',
-  'PEACE_SIGN',
-  'OPEN_PALM',
-  'NEUTRAL',
-]
 
 function SlideVisual({ type }: SlideVisualProps) {
   if (type === 'flow') {
@@ -40,7 +34,7 @@ function SlideVisual({ type }: SlideVisualProps) {
   if (type === 'gestures') {
     return (
       <div className="grid w-full grid-cols-2 gap-2">
-        {gestureLabels.map((gesture, index) => (
+        {gestureNames.map((gesture, index) => (
           <div
             className="rounded-xl border border-zinc-700 bg-zinc-900 p-3"
             key={gesture}
@@ -49,6 +43,9 @@ function SlideVisual({ type }: SlideVisualProps) {
               0{index + 1}
             </span>
             <p className="mt-3 font-mono text-xs text-violet-300">{gesture}</p>
+            <p className="mt-1 text-[10px] text-zinc-400">
+              {gestureInfo[gesture].action}
+            </p>
           </div>
         ))}
       </div>
