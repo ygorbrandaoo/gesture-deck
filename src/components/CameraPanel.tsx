@@ -113,8 +113,8 @@ function CameraPanel({ isEnabled, onVideoReady }: CameraPanelProps) {
     status === 'denied' || status === 'unavailable' || status === 'error'
 
   return (
-    <section className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5 shadow-xl shadow-black/10">
-      <div className="mb-4 flex items-center justify-between">
+    <section className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5 shadow-xl shadow-black/10 lg:p-4">
+      <div className="mb-4 flex items-center justify-between lg:mb-3">
         <div>
           <p className="text-xs font-medium uppercase tracking-[0.18em] text-zinc-500">
             Input device
@@ -198,7 +198,7 @@ function CameraPanel({ isEnabled, onVideoReady }: CameraPanelProps) {
         )}
       </div>
 
-      <p className="mt-3 text-xs leading-5 text-zinc-600">
+      <p className="mt-3 text-xs leading-5 text-zinc-600 lg:hidden">
         Video stays in your browser and is not recorded or uploaded.
       </p>
     </section>

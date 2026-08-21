@@ -133,7 +133,7 @@ function Presentation({
   const isLastSlide = currentSlide === totalSlides - 1
 
   return (
-    <section className="min-w-0 rounded-2xl border border-zinc-800 bg-zinc-900/60 p-3 shadow-2xl shadow-black/20 sm:p-4">
+    <section className="flex min-w-0 flex-col rounded-2xl border border-zinc-800 bg-zinc-900/60 p-3 shadow-2xl shadow-black/20 sm:p-4 lg:h-full">
       <div className="mb-3 flex items-center justify-between px-1 text-xs text-zinc-500">
         <span className="font-medium text-zinc-400">Presentation</span>
         <span className="font-mono">
@@ -141,7 +141,7 @@ function Presentation({
         </span>
       </div>
 
-      <article className="relative flex min-h-[520px] overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 p-7 sm:p-10 lg:min-h-[600px] lg:p-14">
+      <article className="relative flex min-h-[520px] overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 p-7 sm:p-10 lg:min-h-0 lg:flex-1 lg:p-14">
         <div className="absolute left-0 top-0 h-px w-full bg-gradient-to-r from-transparent via-violet-400/40 to-transparent" />
         <div className="grid w-full items-center gap-10 lg:grid-cols-[minmax(0,1fr)_240px] xl:gap-16">
           <div className="max-w-2xl">
@@ -173,15 +173,18 @@ function Presentation({
           </div>
         </div>
 
-        <div className="absolute bottom-5 left-7 right-7 flex gap-1 sm:left-10 sm:right-10 lg:left-14 lg:right-14">
-          {Array.from({ length: totalSlides }, (_, index) => (
-            <div
-              className={`h-0.5 flex-1 rounded-full ${
-                index <= currentSlide ? 'bg-violet-400' : 'bg-zinc-800'
-              }`}
-              key={index}
-            />
-          ))}
+        <div
+          aria-label={`Presentation progress: slide ${currentSlide + 1} of ${totalSlides}`}
+          aria-valuemax={totalSlides}
+          aria-valuemin={1}
+          aria-valuenow={currentSlide + 1}
+          className="absolute bottom-5 left-7 right-7 h-1 overflow-hidden rounded-full bg-zinc-800 sm:left-10 sm:right-10 lg:left-14 lg:right-14"
+          role="progressbar"
+        >
+          <div
+            className="h-full rounded-full bg-violet-400 transition-[width] duration-500 ease-out"
+            style={{ width: `${((currentSlide + 1) / totalSlides) * 100}%` }}
+          />
         </div>
       </article>
 
@@ -192,7 +195,6 @@ function Presentation({
           type="button"
         >
           {showDetails ? 'Hide details' : 'Show details'}
-          <span className="ml-2 font-mono text-violet-300">OPEN_PALM</span>
         </button>
 
         <div className="grid grid-cols-2 gap-2 sm:flex">

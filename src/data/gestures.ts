@@ -7,7 +7,7 @@ export const gestureNames = [
 
 export type GestureName = (typeof gestureNames)[number]
 
-export type GestureCommand = 'previous' | 'next' | 'toggle-details' | null
+export type GestureCommand = 'previous' | 'next' | 'stop-camera' | null
 
 export interface GestureInfo {
   name: string
@@ -31,14 +31,14 @@ export const gestureInfo: Record<GestureName, GestureInfo> = {
   },
   OPEN_PALM: {
     name: 'Open palm',
-    action: 'Show or hide details',
-    description: 'Toggle the extra details for the current slide.',
-    command: 'toggle-details',
+    action: 'Stop camera',
+    description: 'Turn off the webcam feed.',
+    command: 'stop-camera',
   },
   BACKGROUND: {
     name: 'Background',
     action: 'No action',
-    description: 'Move your hand away before making another gesture.',
+    description: 'Move your hand away before repeating the same command.',
     command: null,
   },
 }

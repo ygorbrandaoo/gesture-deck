@@ -51,12 +51,12 @@ A classificação acontece localmente no navegador. Imagens da webcam não são 
 
 ## Classes e ações
 
-- `OPEN_PALM` - mostrar ou esconder os detalhes do slide
+- `OPEN_PALM` - desligar a câmera
 - `PEACE_SIGN` - próximo slide
 - `CLOSED_FIST` - slide anterior
 - `BACKGROUND` - nenhuma ação
 
-Uma ação exige confiança mínima de 85% e cinco predições consecutivas da mesma classe. Depois da execução existe um cooldown de 1200 ms. O mesmo gesto só pode executar novamente após cinco frames de `BACKGROUND` ou sem uma predição válida.
+A confiança exibida e usada para validar gestos é suavizada entre frames. Uma ação exige confiança mínima de 85% mantida por 650 ms. Depois da execução existe um cooldown visual de 2000 ms. Durante esse período nenhuma ação é executada novamente. Para repetir o mesmo comando, mostre `BACKGROUND` antes de fazer o gesto de novo.
 
 ## Dataset
 

@@ -3,9 +3,10 @@ import * as tf from '@tensorflow/tfjs'
 import type { ModelStatus, Prediction } from '../types/prediction'
 
 export const CONFIDENCE_THRESHOLD = 0.85
-export const REQUIRED_STABLE_FRAMES = 5
+export const PREDICTION_SMOOTHING_FACTOR = 0.2
+export const REQUIRED_STABLE_MS = 650
 export const REQUIRED_RELEASE_FRAMES = 5
-export const ACTION_COOLDOWN_MS = 1200
+export const ACTION_COOLDOWN_MS = 2000
 
 const MODEL_URL = '/model/model.json'
 const METADATA_URL = '/model/metadata.json'
@@ -24,7 +25,7 @@ interface GestureModelResult {
   modelStatus: ModelStatus
   modelError: string | null
   predictions: Prediction[]
-  currentPrediction: Prediction | null
+  cooldownRemainingMs: number
 }
 
 function isModelMetadata(value: unknown): value is ModelMetadata {
@@ -131,8 +132,7 @@ export function useGestureModel(
   const [modelStatus, setModelStatus] = useState<ModelStatus>('loading')
   const [modelError, setModelError] = useState<string | null>(null)
   const [predictions, setPredictions] = useState<Prediction[]>([])
-  const [currentPrediction, setCurrentPrediction] =
-    useState<Prediction | null>(null)
+  const [cooldownRemainingMs, setCooldownRemainingMs] = useState(0)
   const onGestureRef = useRef(onGesture)
 
   useEffect(() => {
@@ -183,20 +183,52 @@ export function useGestureModel(
     const activeVideo = videoElement
     let animationFrameId = 0
     let isCancelled = false
+    const smoothedProbabilities = new Map<string, number>()
     let stableClass = ''
-    let stableFrames = 0
+    let stableSince = 0
     let releaseFrames = 0
     let activeGesture = ''
-    let lastActionTime = 0
+    let lastActionTime = -ACTION_COOLDOWN_MS
+
+    function smoothPredictions(nextPredictions: Prediction[]): Prediction[] {
+      return nextPredictions.map((prediction) => {
+        const previousProbability = smoothedProbabilities.get(
+          prediction.className,
+        )
+        const probability =
+          previousProbability === undefined
+            ? prediction.probability
+            : previousProbability +
+              (prediction.probability - previousProbability) *
+                PREDICTION_SMOOTHING_FACTOR
+
+        smoothedProbabilities.set(prediction.className, probability)
+        return { ...prediction, probability }
+      })
+    }
+
+    function updateCooldown(now: number) {
+      const remaining = Math.max(
+        0,
+        ACTION_COOLDOWN_MS - (now - lastActionTime),
+      )
+      const roundedRemaining = Math.ceil(remaining / 100) * 100
+
+      setCooldownRemainingMs((currentRemaining) =>
+        currentRemaining === roundedRemaining ? currentRemaining : roundedRemaining,
+      )
+    }
 
     function validateGesture(prediction: Prediction) {
+      const now = performance.now()
+      updateCooldown(now)
       const isActionableGesture =
         prediction.className !== 'BACKGROUND' &&
         prediction.probability >= CONFIDENCE_THRESHOLD
 
       if (!isActionableGesture) {
         stableClass = ''
-        stableFrames = 0
+        stableSince = 0
         releaseFrames += 1
 
         if (releaseFrames >= REQUIRED_RELEASE_FRAMES) {
@@ -207,29 +239,23 @@ export function useGestureModel(
 
       releaseFrames = 0
 
-      if (prediction.className === stableClass) {
-        stableFrames += 1
-      } else {
+      if (prediction.className !== stableClass) {
         stableClass = prediction.className
-        stableFrames = 1
+        stableSince = now
       }
 
       if (
-        stableFrames < REQUIRED_STABLE_FRAMES ||
-        prediction.className === activeGesture
+        now - stableSince < REQUIRED_STABLE_MS ||
+        prediction.className === activeGesture ||
+        now - lastActionTime < ACTION_COOLDOWN_MS
       ) {
         return
       }
 
-      const cooldownFinished =
-        Date.now() - lastActionTime >= ACTION_COOLDOWN_MS
-
-      if (cooldownFinished) {
-        onGestureRef.current(prediction.className)
-        activeGesture = prediction.className
-        lastActionTime = Date.now()
-        stableFrames = 0
-      }
+      onGestureRef.current(prediction.className)
+      activeGesture = prediction.className
+      lastActionTime = now
+      setCooldownRemainingMs(ACTION_COOLDOWN_MS)
     }
 
     async function predictFrame() {
@@ -244,12 +270,13 @@ export function useGestureModel(
             return
           }
 
-          const topPrediction = nextPredictions.reduce((highest, prediction) =>
-            prediction.probability > highest.probability ? prediction : highest,
+          const stablePredictions = smoothPredictions(nextPredictions)
+          const topPrediction = stablePredictions.reduce(
+            (highest, prediction) =>
+              prediction.probability > highest.probability ? prediction : highest,
           )
 
-          setPredictions(nextPredictions)
-          setCurrentPrediction(topPrediction)
+          setPredictions(stablePredictions)
           validateGesture(topPrediction)
         } catch (error: unknown) {
           if (!isCancelled) {
@@ -276,6 +303,7 @@ export function useGestureModel(
     return () => {
       isCancelled = true
       cancelAnimationFrame(animationFrameId)
+      setCooldownRemainingMs(0)
     }
   }, [model, videoElement])
 
@@ -287,6 +315,6 @@ export function useGestureModel(
     modelStatus,
     modelError,
     predictions: videoElement ? predictions : [],
-    currentPrediction: videoElement ? currentPrediction : null,
+    cooldownRemainingMs,
   }
 }

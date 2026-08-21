@@ -33,7 +33,7 @@ export const slides: Slide[] = [
     title: 'Four clear intents.',
     subtitle: 'A small set of gestures keeps control predictable.',
     description:
-      'Move backward, move forward, reveal extra content, or remain neutral without triggering an action.',
+      'Move backward, move forward, stop the camera, or remain neutral without triggering an action.',
     detail:
       'The final class names may change after the dataset and trained model are evaluated.',
     visual: 'gestures',
